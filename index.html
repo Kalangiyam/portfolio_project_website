@@ -1,0 +1,454 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>T20 world cup data analytics</title>		
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=css&amp;skin=desert"></script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+		<link rel="stylesheet" href="assets/css/lightbox.css"/>		
+	</head>
+
+	<style>
+		.tools img{
+			height: 100px;
+			width: 100px;
+			object-fit: contain;			
+		}	
+		h2{
+			font-weight: 700;			
+		}		
+		h5{
+			font-style:oblique;
+		}
+		h6{
+			text-align: center;
+			color: rgb(253, 253, 253);
+			background-color: rgb(6, 138, 138);
+			border-bottom: 8px solid rgb(5, 138, 138);
+		}
+		.code pre code {
+       		font-size: 12px; 
+    	}		
+		.bi a img:hover{
+			opacity: 80%;		
+		}		
+	</style>
+	<body class="no-sidebar is-preload">
+		<div id="page-wrapper">
+			<!-- Header -->
+				<div id="header">
+					<!-- Inner -->
+						<div class="inner">
+							<header>								
+								<h1>D.KALANGIYAM PORTFOLIO</h1>
+								<p>Data Analyst skilled in MySQL,Excel,Power bi,Tableau and Python(Pandas,Numby,Beautifulsoup,Scrapy) </p>
+							</header>
+						</div>
+					<!-- Nav -->
+						<nav id="nav">
+							<ul class="">
+								<li><a href="https://www.linkedin.com/in/dkalangiyam" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+								<li><a href="https://github.com/Kalangiyam/PortfolioProjects/tree/main/T20%20WORLD%20CUP%20DATA%20ANALYTICS" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+								<li><a href="mailto:d.kalangiyam97@gmail.com" class="icon solid fa-envelope"><span class="label">Gmail</span></a></li>
+							</ul>							
+						</nav>
+				</div>
+			<!-- Main -->
+				<div class="wrapper style1">
+					<div class="container">						
+						<article id="main" class="special">
+							<header>
+								<h2>T20 WORLD CUP DATA ANALYTICS</h2>								
+							</header>
+							<section>
+								<h4>Tools used in this project</h4>
+								<div class="tools">
+									<img src="./images/scrapy logo.png"  alt="">
+									<img src="./images/power-bi- logo.png"  alt="">
+								</div>								
+								<header>
+									<h4>OBJECIVE</h4>
+								</header>
+								<p>
+									Our aim is to form a cricket team comprising 11 players from the ICC Men's T20 World Cup 2022.
+								</p>								
+							</section>
+							<a href="./images/Paramaeter Scoping_1.jpg" class="image featured"><img src="./images/Paramaeter Scoping_1.jpg" alt="" /></a>							
+							<section>
+								<header>
+									<h4>Data Collection and Transformation</h4>
+								</header>
+								<p>To start our project, we needed data about the ICC T20 World Cup 2022. 
+									So, I used a tool called Scrapy in Python to scrape data from ESPN Cricinfo, 
+									a cricket website. Then, I converted this data into CSV format using the Pandas library in Python. 
+									As a result, we now have three separate datasets: match_summary, batting_summary, and bowling_summary. 
+									It's likely that these datasets hold detailed information about match summaries, 
+									how well players batted, and how well they bowled in the ICC T20 World Cup 2022.
+								</p>
+								<div class="code">
+									<Pre class="prettyprint lang-python"> 
+										<code>
+	# First let's import the packages we will use in this project
+													
+	import scrapy
+	import pandas as pd
+	from datetime import datetime
+	import re
+
+	# For Match
+	teamf=[]
+	teams=[]
+	margin=[]
+	ground=[]
+	date=[]
+	match_1=[]
+	winner=[]
+
+
+	# For Batsman
+	match=[]
+	teaming_bat=[]
+	battingor=[]
+	batt=[]
+	run=[]
+	ball=[]
+	four=[]
+	six=[]
+	srs=[]
+	outs=[]
+	match_no=[]
+	matchno=[]
+
+	# For Bowler
+	teaming_bow=[]            
+	bow=[]
+	over=[]
+	maiden=[]
+	wickets=[]
+	economy=[]
+	zes=[]
+	fos=[]
+	sixb=[]
+	wides=[]
+	noBalls=[]
+	runb=[]
+	wic=[]
+	match_bow=[]
+	matchnob=[]
+
+
+	class Level2Spider(scrapy.Spider):
+		name = "level2"
+		allowed_domains = ["www.espncricinfo.com"]
+		start_urls = ["https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2022-23-1298134/namibia-vs-sri-lanka-1st-match-first-round-group-a-1298135/full-scorecard"]
+
+		def parse(self, response):
+			infon=response.xpath('//div[contains(@class,"ds-text-tight-m ds-font-regular ds-text-typo-mid3")]/text()').get()
+			match_1.append(infon.split(",")[0].strip(' (N)'))
+			if infon is not None:
+				if 'Final' in infon:                
+					ground.append(infon.split(",")[1].strip())
+					date.append(datetime.strptime(((infon.split(",")[2].strip())+" "+(infon.split(",")[3].strip())), '%B %d %Y').strftime('%d-%b-%Y'))
+				else: 
+					ground.append(infon.split(",")[2].strip())
+					date.append(datetime.strptime(((infon.split(",")[3].strip())+" "+(infon.split(",")[4].strip())), '%B %d %Y').strftime('%d-%b-%Y'))
+			
+		
+			team=response.xpath('//div[contains(@class,"r-1")]/a/span/text()').getall()
+			for n, teamg in enumerate(team):
+				if n==0 :
+					teamf.append(teamg)
+				else:
+					teams.append(teamg)   
+
+			win=response.xpath('//p[contains(@class,"m")]/span/text()').get()
+			win=re.sub(r'\([^)]*\)', '', win).strip()
+			winn=(win.split(" "))
+
+		# This section collect winner and margin data
+			if win in ["No result", "Match abandoned without a ball bowled"]:
+					winner.append(win)
+					margin.append("  -  ")
+			else:
+				n=len(winn)            
+				if n==6:
+					winner.append(winn[0]+" "+winn[1])
+					margin.append(winn[4]+" "+winn[5])               
+								
+				else:
+					winner.append(winn[0])
+					margin.append(winn[3]+" "+winn[4])
+
+		# Batsman  & Bowler data
+			if 'Match abandoned' not in win: 
+				for n in range(4):
+					tbody=response.xpath('//div/table/tbody')[n]
+					
+					if n in [0,3]:
+						t=0 # Represents the index of the first team
+						o=1 # Represents player batting position
+					else:
+						t=1 # Represents the index of the second team
+						o=1
+
+				# Batsman data                
+					if n==0 or n==2:
+						batsman=tbody.xpath('.//tr/td[1]/div/a/span/span/text()[1]').getall() 
+						
+						runs=tbody.xpath('.//tr[@class=""]/td[3]/strong/text()').getall()
+					
+						balls=tbody.xpath('.//tr/td[4]/text()').getall()
+						fours=tbody.xpath('.//tr/td[6]/text()').getall()
+						sixs=tbody.xpath('.//tr/td[7]/text()').getall()
+						sr=tbody.xpath('.//tr/td[8]/text()').getall()               
+						for n in range(len(batsman)):
+							teaming_bat.append(team[t])
+							match.append(team[0]+" vs "+team[1])
+							battingor.append(o)
+							o+=1
+							batt.append(batsman[n].strip())
+							run.append(runs[n].strip())
+							ball.append(balls[n].strip())
+							four.append(fours[n].strip())
+							six.append(sixs[n].strip())
+							srs.append(sr[n].strip())
+							out=tbody.xpath('.//tr[@class=""]/td[contains(@class,"x !")]')[n].xpath('.//text()').get().strip()
+							if out=='not out':
+								outs.append(out)
+							else:
+								outs.append('out')
+							matchno.append(response.xpath('//div[contains(@class,"r ds-t")]/text()[1]').get().split(',')[0].strip(' (N)'))
+						
+							
+				# Bowlers data      
+					else:                
+						bowlerName=tbody.xpath('.//tr/td[1]/div/a/span/text()').getall()                
+						overs=tbody.xpath('.//tr/td[2]/text()').getall()
+						maidens=tbody.xpath('.//tr/td[3]/text()').getall()
+						run_bow=tbody.xpath('.//tr/td[4]/text()').getall()
+						economyb=tbody.xpath('.//tr/td[6]/text()').getall()
+						zs=tbody.xpath('.//tr/td[7]/text()').getall()
+						fs=tbody.xpath('.//tr/td[8]/text()').getall()
+						ss=tbody.xpath('.//tr/td[9]/text()').getall()
+						wide=tbody.xpath('.//tr/td[10]/text()').getall()
+						noBall=tbody.xpath('.//tr/td[11]/text()').getall()
+						for n in range(len(bowlerName)):
+							match_bow.append(team[0]+" vs "+team[1])
+							teaming_bow.append(team[t])
+							bow.append(bowlerName[n].strip())
+							over.append(overs[n].strip())
+							maiden.append(maidens[n].strip())
+							runb.append(run_bow[n].strip())
+							wickets=tbody.xpath('.//tr/td[5]')[n].xpath('.//span/strong/text()').get()
+							if wickets==None:
+								wic.append('0')
+							else:
+								wic.append(wickets)
+					
+							economy.append(economyb[n].strip())
+							zes.append(zs[n].strip())
+							fos.append(fs[n].strip())                
+							sixb.append(ss[n].strip())
+							wides.append(wide[n].strip())
+							noBalls.append(noBall[n].strip())
+							matchnob.append(response.xpath('//div[contains(@class,"r ds-t")]/text()[1]').get().split(',')[0].strip(' (N)'))
+							
+
+		# Next page url
+			next_url=response.xpath('//div/a[contains(@class,"ds-group ds-inline-flex ds-items-center ds-ml-4")]/@href').get()
+			
+			if next_url is not None:
+				url=next_url.replace('live-cricket-score','full-scorecard')
+				next_page='https://www.espncricinfo.com'+url
+				print(next_page)
+				yield response.follow(next_page,callback=self.parse)
+
+		# Making csv file with pandas dataframe 
+		
+		# Match data
+			mat= {'ground':ground,'date':date,'match':match_1,'winner':winner,'margin':margin,'team1':teamf,'team2':teams}
+			m=pd.DataFrame(mat)
+			m.to_csv('match_summary.csv',index=False) 
+
+		# Bowling data
+			bowf ={'match':match_bow,'bowlingTeam':teaming_bow,'bowlerName':bow,'overs':over, 'maiden':maiden, 
+				'runs':runb,'wickets':wic, 'economy':economy,'0s':zes,'4s':fos,'6s':sixb,'wides':wides,'noBalls':noBalls,'match_id':matchnob}
+			dfbow=pd.DataFrame(bowf)
+			dfbow.to_csv('bowling_summary.csv',index=False)
+					
+		# Batting data
+			bat={'match':match,'battingTeam':teaming_bat,'batting_pos':battingor,'batsmanName':batt,'runs':run,'balls':ball,
+				'fours':four,'sixs':six, 'sr':srs,'out':outs,'match_no':matchno,}
+			dfbat=pd.DataFrame(bat)
+			dfbat.to_csv('batting_summary.csv',index=False)
+			
+
+
+										</code>
+									</Pre>
+									<p>I used the following code to extract player information from ESPN Cricinfo,
+										 specifically focusing on those who took part in the ICC T20 World Cup 2022.
+									</p>
+									<Pre class="prettyprint lang-python">
+										<code>
+		# First let's import the packages we will use in this project
+		import scrapy
+
+		class PlayerSpider(scrapy.Spider):
+			name = "player"
+			allowed_domains = ["www.espncricinfo.com"]
+			start_urls = ["https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2022-23-1298134/afghanistan-squad-1334760/series-squads"]
+
+			def parse(self, response):
+				
+				divs=response.xpath('//div[@class="ds-relative ds-flex ds-flex-row ds-space-x-4 ds-p-3"]')       
+				
+				# team name
+				name1=divs.xpath('//span[@class="ds-text-title-xs ds-font-bold ds-text-typo"]/text()')[1].get()
+				name2=name1.replace("squad","")
+				teamName=name2.replace("Squad","").strip()
+
+				# plyer information
+				for n,div in enumerate(divs):
+					playerName=div.xpath('.//a/span/text()').get().strip()
+					playingRole=div.xpath('.//p/text()').get().strip()
+					battingStyle=div.xpath('.//div[@class="ds-justify-between ds-text-typo-mid3"]/div[2]/span[2]/text()').get()
+					bowlingStyle=div.xpath('.//div[@class="ds-justify-between ds-text-typo-mid3"]/div[3]/span[2]/text()').get()            
+				
+					yield {'name':playerName,'team':teamName ,'playingRole':playingRole,'battingStyle':battingStyle,'bowlingStyle':bowlingStyle}
+			
+				# getting team squad links
+				links=response.xpath('//div[@class="ds-p-0"]/a/@href').getall()       
+				for n,link in enumerate(links):
+					if n>0:                
+						yield response.follow(url=link, callback=self.parse)
+				
+										</code>
+									</Pre>	
+								</div>
+								<section>
+									<h5>Enhancing Analysis with Calculated Columns and Dynamic Measures</h5>
+									<p>
+										In the subsequent phase of the project, I maximized the potential of the collected data. 
+										By incorporating calculated columns, 
+										I introduced supplementary insights right into the dataset. 
+										These fixed values enriched our analysis. Moreover, by utilizing dynamic measures, 
+										I performed real-time calculations that enabled deeper data exploration and facilitated the creation of interactive visuals.
+									</p>									
+								</section>
+							</section>
+							<h6>Measures</h6>
+								<a href="./images/Measures1.jpg" class="image featured"><img src="./images/Measures1.jpg" alt="" /></a>
+							<h6>Colculated Columns</h6>							
+								<a href="./images/calculated column1.jpg" class="image featured"><img src="./images/calculated column1.jpg" alt=""></a>
+						</article>						
+						<div class="row">								
+							<section>								
+								<header>
+									<h4>Data Visualization</h4>
+								</header>
+								<p>
+									Following that, I applied filters to the players based on specific parameters. Consequently, 
+									I identified and selected players who met the desired criteria.
+								</p>
+							</section>
+							<article class="col-6 col-12-mobile special bi">
+								<h5>Paramaeters</h5>
+								<a href="./images/Paramaeter Scoping_2-2.jpg" class="image featured" data-lightbox="paramaeter" data-title="Openers">
+									<img src="./images/Paramaeter Scoping_2-2.jpg" alt="" >
+								</a>
+								<a href="./images/Paramaeter Scoping-pages-3.jpg" class="image featured" data-lightbox="paramaeter" data-title="Middle order">
+									<img src="./images/Paramaeter Scoping-pages-3.jpg" alt="" >
+								</a>
+								<a href="./images/Paramaeter Scoping_4-4.jpg" class="image featured" data-lightbox="paramaeter" data-title="Finiser">
+									<img src="./images/Paramaeter Scoping_4-4.jpg" alt="" >
+								</a>
+								<a href="./images/Paramaeter Scoping-pages-5.jpg"  class="image featured" data-lightbox="paramaeter" data-title="All-arounders/Lower order">
+									<img src="./images/Paramaeter Scoping-pages-5.jpg" alt="" >
+								</a>
+								<a href="./images/Paramaeter Scoping_6-end.jpg" class="image featured" data-lightbox="paramaeter" data-title="Specialist fast bowlers">
+									<img src="./images/Paramaeter Scoping_6-end.jpg" alt="" >
+								</a>							
+							</article>
+							<article class="col-6 col-12-mobile special bi">
+								<h5>Results</h5>	
+								<a href="./images/PowerHitters.png" class="image featured" data-lightbox="Visualization" data-title="Openers">
+									<img src="./images/PowerHitters.png" >									
+								</a>
+								<a href="./images/Middle Orders.png" class="image featured" data-lightbox="Visualization" data-title="Middle order">
+									<img src="./images/Middle Orders.png"  alt="">
+								</a>
+								<a href="./images/Finishers.png" class="image featured" data-lightbox="Visualization" data-title="Finiser">
+									<img src="./images/Finishers.png" alt="" >
+								</a>
+								<a href="./images/All rounder.png" class="image featured" data-lightbox="Visualization" data-title="All-arounders/Lower order">
+									<img src="./images/All rounder.png" alt="" >
+								</a>
+								<a href="./images/Fast Bowlers.png" class="image featured" data-lightbox="Visualization" data-title="Specialist fast bowlers">
+									<img src="./images/Fast Bowlers.png" alt="" >
+								</a>
+							</article>
+							<section>								
+								<header>
+									<h4>Conclustion</h4>
+								</header>
+								<p>
+									Used the resulting Power BI dashboard to select players for various categories 
+									(openers, middle order/anchors, finishers, all-rounders, specialist fast bowlers)
+									and ultimately choose the top 11 players to play in the match. 
+								</p>								
+								<a href="./images/Final 11.png" class="image featured"><img class="final" src="./images/Final 11.png"  alt=""></a>
+								<p>Selected team using the Power BI dashboard has 90% of chances to win the game.</p>								
+							</section>
+							<section id="acknowledgments" >
+								<header><h4>Special Thanks</h4></header>
+								<p>I want to express my sincere gratitude to the <a href="https://www.youtube.com/c/CodeBasics">
+									codebasics</a> YouTube channel, specifically for their excellent tutorial on the <a href="https://www.youtube.com/watch?v=4QkYy1wANXA&list=PLeo1K3hjS3usb3av_7Eok21V20XlpJc_X">"End To End Cricket Data 
+									Analytics Project."</a> Their insightful content and step-by-step guidance were instrumental in inspiring and 
+									shaping the direction of this project.</p>
+								<p>I made several modifications according to my specific needs and vision. While they collect data using the 
+								   Bright Data tool, I opted for the Python framework Scrapy</p>
+							</section>
+						</div>
+					</div>
+				</div>
+			<!-- Footer -->
+				<div id="footer">
+					<div class="container">
+						<div class="row">
+							<!-- Contact-->
+								<section class="col-6 col-12-mobile">
+									<header>
+										<h3 class="">contact</h3>
+									</header>
+									<ul class="divided">
+										<li class="icon solid fa-home"><br/>
+											1 A South Mada Street,<br />
+											Tolgate,<br />
+											Kanchipuram, PIN-631 501.
+										</li>
+										<li class="icon solid fa-phone"><br/><a href="tel:+91 81244 01843">+91 81244 01843</a></li>
+										<li class="icon solid fa-envelope"><br/><a href="mailto:d.kalangiyam97@gmail.com">d.kalangiyam97@gmail.com</a></li>
+										<li class="icon brands fa-linkedin"><br/><a href="https://www.linkedin.com/in/dkalangiyam/">https://www.linkedin.com/in/dkalangiyam/</a></li>
+										<li class="icon brands fa-github"><br/><a href="https://github.com/Kalangiyam/PortfolioProjects/tree/main/T20%20WORLD%20CUP%20DATA%20ANALYTICS">GitHub</a></li>
+									</ul>
+								</section>
+						</div>			
+					</div>
+				</div>
+		</div>
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="assets/js/lightbox-plus-jquery.js"></script>			
+	</body>
+</html>
